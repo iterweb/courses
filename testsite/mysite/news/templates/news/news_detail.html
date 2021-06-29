@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+	{{object.title}} | {{block.super}}
+{% endblock title %}
+
+{% block content %}
+
+			<div class="card mb-3">
+  			<div class="card-header">
+				Категория: <a href="{{object.category.get_absolute_url}}"> {{ object.category }}</a>
+  				</div>
+  			<div class="card-body">
+		  		{% if object.photo %}
+		  		<img src="{{ object.photo.url }}" alt="" width="400" class="float-left mr-3">
+		  		{% else %}
+		  		<img src="{% static 'no_img/No_image.png' %}" alt="" width="400" class="float-left mr-3">
+		  		{% endif %}
+				<h5 class="card-title {% cycle 'text-danger' 'text-success' %}">{{object.title}}</h5>
+				<p class="card-text">{{object.content|linebreaks}}</p>
+			</div>
+  			</div>
+			<div class="card-footer text-muted">
+				{{ object.created_at|date:"Y-m-d H:i:s" }}
+			</div>
+{% endblock content %}

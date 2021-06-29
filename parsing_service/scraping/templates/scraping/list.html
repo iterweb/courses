@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Вакансии
+{% endblock title%}
+
+{% block content %}
+
+   <h1>Вакансии</h1>
+
+    {% for vacancy in object_list %}
+
+    <div class="card my-2">
+    <h5 class="card-header"><a href="{{ vacancy.url }}" target="_blank">{{ vacancy.title }}</a></h5>
+    <div class="card-body">
+        <p class="card-text"><b>{{ vacancy.company }}</b></p>
+        <p class="card-text">{{ vacancy.description }}</p>
+        <p class="card-text">{{ vacancy.language }}</p>
+        <p class="card-text">{{ vacancy.city }}</p>
+        <p class="card-text">{{ vacancy.timestamp }}</p>
+    </div>
+    </div>
+
+{% empty %}
+    <div class="col-md-6 mx-auto mb-4">
+        <h3>Ничего не найдено</h3>
+    </div>
+
+{% endfor %}
+
+{% if object_list %}
+
+<div class="row">
+    <div class="col">
+
+        <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item">
+
+        {% if object_list.has_previous %}
+
+            <a class="page-link" href="?city={{city}}&language={{language}}&page={{ object_list.previous_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
+
+        {% endif %}
+
+            </li>
+
+        {% for page in object_list.paginator.page_range %}
+
+            <li class="page-item {% if page == object_list.number %} active {% endif %}">
+            {% if page > object_list.number|add:'-5' and page < object_list.number|add:'5' %}
+                <a class="page-link" href="?city={{city}}&language={{language}}&page={{page}}">{{page}}</a>
+            {% endif %}
+            </li>
+
+        {% endfor %}
+            <li class="page-item">
+
+            {% if object_list.has_next %}
+
+            <a class="page-link" href="?city={{city}}&language={{language}}&page={{ object_list.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </a>
+
+            {% endif %}
+
+            </li>
+        </ul>
+        </nav>
+
+    </div>
+</div>
+
+{% endif %}
+
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <form action="{% url 'list' %}" method="get" class="my-4">
+        <div class="form-group">
+        
+        {{ form.as_p }}
+
+        </div>
+        <button type="submit" class="btn btn-primary">Найти</button>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}
